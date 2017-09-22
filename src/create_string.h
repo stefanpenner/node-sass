@@ -4,5 +4,6 @@
 #include <nan.h>
 
 char* create_string(Nan::MaybeLocal<v8::Value>);
+const char* as_string(Nan::MaybeLocal<v8::Value>);
 
 #endif

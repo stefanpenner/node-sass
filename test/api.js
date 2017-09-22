@@ -1,5 +1,6 @@
 /*eslint new-cap: ["error", {"capIsNewExceptions": ["Color"]}]*/
 
+
 var assert = require('assert'),
   fs = require('fs'),
   path = require('path'),
@@ -11,10 +12,11 @@ var assert = require('assert'),
   fixture = path.join.bind(null, __dirname, 'fixtures'),
   resolveFixture = path.resolve.bind(null, __dirname, 'fixtures');
 
+ var expected = read(fixture('simple/expected.css'), 'utf8').trim();
+
 describe('api', function() {
 
   describe('.render(options, callback)', function() {
-
     beforeEach(function() {
       delete process.env.SASS_PATH;
     });

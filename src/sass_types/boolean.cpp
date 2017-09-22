@@ -6,16 +6,18 @@ namespace SassTypes
   Nan::Persistent<v8::Function> Boolean::constructor;
   bool Boolean::constructor_locked = false;
 
-  Boolean::Boolean(bool v) : value(v) {}
+  Boolean::Boolean(bool _value) {
+      value = sass_make_boolean(_value);
+  }
 
   Boolean& Boolean::get_singleton(bool v) {
     static Boolean instance_false(false), instance_true(true);
     return v ? instance_true : instance_false;
   }
-
+    
   v8::Local<v8::Function> Boolean::get_constructor() {
     Nan::EscapableHandleScope scope;
-    v8::Local<v8::Function> conslocal; 
+    v8::Local<v8::Function> conslocal;
     if (constructor.IsEmpty()) {
       v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
 
@@ -42,16 +44,15 @@ namespace SassTypes
     return scope.Escape(conslocal);
   }
 
-  Sass_Value* Boolean::get_sass_value() {
-    return sass_make_boolean(value);
-  }
-
   v8::Local<v8::Object> Boolean::get_js_object() {
     return Nan::New(this->js_object);
   }
+    
+    v8::Local<v8::Boolean> Boolean::get_js_boolean() {
+        return sass_boolean_get_value(this->value) ? Nan::True() : Nan::False();
+    }
 
   NAN_METHOD(Boolean::New) {
-
     if (info.IsConstructCall()) {
       if (constructor_locked) {
         return Nan::ThrowTypeError("Cannot instantiate SassBoolean");
@@ -61,15 +62,12 @@ namespace SassTypes
       if (info.Length() != 1 || !info[0]->IsBoolean()) {
         return Nan::ThrowTypeError("Expected one boolean argument");
       }
-
+        
       info.GetReturnValue().Set(get_singleton(Nan::To<bool>(info[0]).FromJust()).get_js_object());
     }
   }
 
   NAN_METHOD(Boolean::GetValue) {
-    Boolean *out;
-    if ((out = static_cast<Boolean*>(Factory::unwrap(info.This())))) { 
-      info.GetReturnValue().Set(Nan::New(out->value));
-    }
+     info.GetReturnValue().Set(Boolean::Unwrap<Boolean>(info.This())->get_js_boolean());
   }
 }

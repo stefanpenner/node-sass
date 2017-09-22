@@ -11,10 +11,10 @@ namespace SassTypes
 
     if (raw_val.size() >= 1) {
       if (!raw_val[0]->IsString()) {
-        return fail("Argument should be a string.", out);
+        fail("Argument should be a string.", out);
       }
 
-      value = create_string(raw_val[0]);
+      value = as_string(raw_val[0]);
     }
 
     return *out = sass_make_error(value);

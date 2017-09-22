@@ -61,11 +61,15 @@ namespace SassTypes
   }
 
   Value* Factory::unwrap(v8::Local<v8::Value> obj) {
-    // Todo: non-SassValue objects could easily fall under that condition, need to be more specific.
-    if (!obj->IsObject() || obj.As<v8::Object>()->InternalFieldCount() != 1) {
+      if (obj->IsObject()) {
+          v8::Local<v8::Object> v8_obj = obj.As<v8::Object>();
+          if (v8_obj->InternalFieldCount() == 1) {
+              SassTypes::Value* value = SassTypes::Value::Unwrap<Value>(v8_obj);
+              if (value->hasKnownTag()) {
+                  return value;
+              }
+          }
+      }
       return NULL;
-    }
-
-    return static_cast<Value*>(Nan::GetInternalFieldPointer(obj.As<v8::Object>(), 0));
   }
 }
