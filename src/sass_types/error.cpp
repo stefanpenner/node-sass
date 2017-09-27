@@ -14,7 +14,7 @@ namespace SassTypes
         fail("Argument should be a string.", out);
       }
 
-      value = as_string(raw_val[0]);
+      value = create_string(raw_val[0]);
     }
 
     return *out = sass_make_error(value);

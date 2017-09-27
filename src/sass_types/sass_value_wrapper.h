@@ -36,9 +36,7 @@ namespace SassTypes
     v8::Local<v8::Object> SassValueWrapper<T>::get_js_object() {
         if (this->persistent().IsEmpty()) {
             v8::Local<v8::Object> wrapper = Nan::NewInstance(T::get_constructor()).ToLocalChecked();
-            //delete static_cast<T*>(Nan::GetInternalFieldPointer(wrapper, 0));
-            Nan::SetInternalFieldPointer(wrapper, 0, this);
-            this->persistent().Reset(wrapper);
+            this->Wrap(wrapper);
         }
         
         return this->handle();

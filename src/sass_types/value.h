@@ -32,7 +32,7 @@ namespace SassTypes
     ~Value() {
         sass_delete_value(this->value);
     }
-        
+            
     Sass_Value* get_sass_value() {
         return sass_clone_value(this->value);
     }

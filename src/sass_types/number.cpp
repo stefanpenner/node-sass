@@ -22,7 +22,11 @@ namespace SassTypes
           return fail("Second argument should be a string.", out);
         }
 
-        unit = as_string(raw_val[1]);
+        unit = create_string(raw_val[1]);
+        *out = sass_make_number(value, unit);
+        delete unit;
+        return *out;
+
       }
     }
 

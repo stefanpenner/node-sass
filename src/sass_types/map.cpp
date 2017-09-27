@@ -86,7 +86,9 @@ namespace SassTypes
       return Nan::ThrowRangeError(Nan::New("Out of bound index").ToLocalChecked());
     }
 
-    info.GetReturnValue().Set(Factory::create(sass_map_get_key(map, Nan::To<uint32_t>(info[0]).FromJust()))->get_js_object());
+    SassTypes::Value* obj = Factory::create(sass_map_get_key(map, Nan::To<uint32_t>(info[0]).FromJust()));
+    v8::Local<v8::Object> js_obj = obj->get_js_object();
+    info.GetReturnValue().Set(js_obj);
   }
 
   NAN_METHOD(Map::SetKey) {

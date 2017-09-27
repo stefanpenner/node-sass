@@ -47,7 +47,7 @@ namespace SassTypes
       return Nan::ThrowTypeError("Supplied index should be an integer");
     }
 
-      Sass_Value* list = List::Unwrap<List>(info.This())->value;
+    Sass_Value* list = List::Unwrap<List>(info.This())->value;
     size_t index = Nan::To<uint32_t>(info[0]).FromJust();
 
 

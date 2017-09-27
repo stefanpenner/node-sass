@@ -29,6 +29,7 @@ SassImportList CustomImporterBridge::post_process_return_value(v8::Local<v8::Val
         imports[i] = sass_make_import_entry(0, 0, 0);
 
         sass_import_set_error(imports[i], message, -1, -1);
+        delete message;
       }
       else {
         imports[i] = get_importer_entry(object);
@@ -43,6 +44,7 @@ SassImportList CustomImporterBridge::post_process_return_value(v8::Local<v8::Val
     imports[0] = sass_make_import_entry(0, 0, 0);
 
     sass_import_set_error(imports[0], message, -1, -1);
+    delete message;
   }
   else if (returned_value->IsObject()) {
     imports = sass_make_import_list(1);
@@ -87,7 +89,13 @@ Sass_Import* CustomImporterBridge::get_importer_entry(const v8::Local<v8::Object
   char* contents = create_string(returned_contents);
   char* srcmap = create_string(returned_map);
 
-  return sass_make_import_entry(path, contents, srcmap);
+  Sass_Import* result = sass_make_import_entry(path, contents, srcmap);
+    
+  delete path;
+  delete contents;
+  delete srcmap;
+    
+  return result;
 }
 
 std::vector<v8::Local<v8::Value>> CustomImporterBridge::pre_process_args(std::vector<void*> in) const {
